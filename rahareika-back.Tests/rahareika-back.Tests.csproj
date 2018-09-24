@@ -57,6 +57,9 @@
     <Reference Include="Org.Sdmx.Resources.SdmxMl.Schemas.V21, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SdmxSource.NuGet.1.12.0\lib\net40-full\Org.Sdmx.Resources.SdmxMl.Schemas.V21.dll</HintPath>
     </Reference>
+    <Reference Include="Sax.Net, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sax.Net.2.0.2\lib\net45\Sax.Net.dll</HintPath>
+    </Reference>
     <Reference Include="SdmxApi, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SdmxSource.NuGet.1.12.0\lib\net40-full\SdmxApi.dll</HintPath>
     </Reference>
