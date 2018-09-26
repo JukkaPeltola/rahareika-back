@@ -80,11 +80,16 @@ namespace rahareika_back.Controllers
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage response = await client.GetAsync(newUrl);
                 HttpResponseMessage response2 = await client.GetAsync(newUrl2);
+
                 if (response.IsSuccessStatusCode && response2.IsSuccessStatusCode)
                 {
+
                     string jsonData = await response.Content.ReadAsStringAsync();
                     string jsonData2 = await response2.Content.ReadAsStringAsync();
-                    return (Content(jsonData + jsonData2, "application/json"));
+
+                    return Json(jsonData + jsonData2, JsonRequestBehavior.AllowGet);
+
+                    //return (Content(jsonData, "application/json"));
                 }
 
                 return Json(1, JsonRequestBehavior.AllowGet);
