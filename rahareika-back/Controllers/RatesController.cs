@@ -5,18 +5,20 @@ using System.Web.Http.Cors;
 using System.Web.Mvc;
 
 namespace rahareika_back.Controllers
-{    public class RatesController : Controller
+{
+    [RoutePrefix("rates")]
+    public class RatesController : Controller
     {
+
         string url = "https://api.exchangeratesapi.io/latest";
-        //string url2 = "https://api.exchangeratesapi.io/2010-01-12";
         public async Task<ActionResult> GetLatestRates()
         {
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new System.Uri(url); 
+                client.BaseAddress = new System.Uri(url);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage response = await client.GetAsync(url); 
+                HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
                     string jsonData = await response.Content.ReadAsStringAsync();
@@ -46,6 +48,43 @@ namespace rahareika_back.Controllers
                 {
                     string jsonData = await response.Content.ReadAsStringAsync();
                     return (Content(jsonData, "application/json"));
+                }
+
+                return Json(1, JsonRequestBehavior.AllowGet);
+            }
+        }
+        [Route("comparerates /{startDate}/{endDate }")]
+        public async Task<ActionResult> CompareRates(string startDate, string endDate)
+        {
+            string date = startDate.ToString();
+            string year = date.Substring(0, 4);
+            string day = date.Substring(4, 2);
+            string month = date.Substring(6, 2);
+            string urlDate = year + "-" + day + "-" + month;
+
+            string date2 = endDate.ToString();
+            string year2 = date2.Substring(0, 4);
+            string day2 = date2.Substring(4, 2);
+            string month2 = date2.Substring(6, 2);
+            string urlDate2 = year2 + "-" + day2 + "-" + month2;
+
+            string newUrl = "https://api.exchangeratesapi.io/" + urlDate;
+            string newUrl2 = "https://api.exchangeratesapi.io/" + urlDate2;
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new System.Uri(newUrl);
+                client.BaseAddress = new System.Uri(newUrl2);
+
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = await client.GetAsync(newUrl);
+                HttpResponseMessage response2 = await client.GetAsync(newUrl2);
+                if (response.IsSuccessStatusCode && response2.IsSuccessStatusCode)
+                {
+                    string jsonData = await response.Content.ReadAsStringAsync();
+                    string jsonData2 = await response2.Content.ReadAsStringAsync();
+                    return (Content(jsonData + jsonData2, "application/json"));
                 }
 
                 return Json(1, JsonRequestBehavior.AllowGet);
