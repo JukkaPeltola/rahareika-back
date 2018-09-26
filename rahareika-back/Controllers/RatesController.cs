@@ -56,16 +56,15 @@ namespace rahareika_back.Controllers
         [Route("comparerates /{startDate}/{endDate }")]
         public async Task<ActionResult> CompareRates(string startDate, string endDate)
         {
-            string date = startDate.ToString();
-            string year = date.Substring(0, 4);
-            string day = date.Substring(4, 2);
-            string month = date.Substring(6, 2);
+
+            string year = startDate.Substring(0, 4);
+            string day = startDate.Substring(4, 2);
+            string month = startDate.Substring(6, 2);
             string urlDate = year + "-" + day + "-" + month;
 
-            string date2 = endDate.ToString();
-            string year2 = date2.Substring(0, 4);
-            string day2 = date2.Substring(4, 2);
-            string month2 = date2.Substring(6, 2);
+            string year2 = endDate.Substring(0, 4);
+            string day2 = endDate.Substring(4, 2);
+            string month2 = endDate.Substring(6, 2);
             string urlDate2 = year2 + "-" + day2 + "-" + month2;
 
             string newUrl = "https://api.exchangeratesapi.io/" + urlDate;
@@ -88,8 +87,6 @@ namespace rahareika_back.Controllers
                     string jsonData2 = await response2.Content.ReadAsStringAsync();
 
                     return Json(jsonData + jsonData2, JsonRequestBehavior.AllowGet);
-
-                    //return (Content(jsonData, "application/json"));
                 }
 
                 return Json(1, JsonRequestBehavior.AllowGet);
