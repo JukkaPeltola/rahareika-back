@@ -10,11 +10,13 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Xml.Linq;
 
+
 namespace rahareika_back.Controllers
 {
     public class ValuesController : ApiController
     {
         private static readonly HttpClient client = new HttpClient();
+
         // GET api/values
         public string GetMonthlyUsdEurFrom1999ToNow()
         {
