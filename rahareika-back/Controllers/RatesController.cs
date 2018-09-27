@@ -94,11 +94,11 @@ namespace rahareika_back.Controllers
             }
         }
 
-        [Route("currencychange /{currency}/{startDate}/{endDate }")]
-        public async Task<ActionResult> CurrencyChange(string currency, string startDate, string endDate)
+        [Route("valuechange /{currency}/{startDate}/{endDate }")]
+        public async Task<ActionResult> ValueChange(string currency, string startDate, string endDate)
         {
-            string newUrl = "https://api.exchangeratesapi.io/" + startDate;
-            string newUrl2 = "https://api.exchangeratesapi.io/" + endDate;
+            string newUrl = "https://api.exchangeratesapi.io/" + startDate + "?symbols=" + currency;
+            string newUrl2 = "https://api.exchangeratesapi.io/" + endDate + "?symbols=" + currency;
 
             using (HttpClient client = new HttpClient())
             {
@@ -116,15 +116,13 @@ namespace rahareika_back.Controllers
                     string jsonData = await response.Content.ReadAsStringAsync();
                     string jsonData2 = await response2.Content.ReadAsStringAsync();
 
-                    Rootobject rates = JsonConvert.DeserializeObject<Rootobject>(jsonData);
-                    Rootobject rates2 = JsonConvert.DeserializeObject<Rootobject>(jsonData2);
+                    //Rootobject rate1 = JsonConvert.DeserializeObject<Rootobject>(jsonData);
+                    //Rootobject rate2 = JsonConvert.DeserializeObject<Rootobject>(jsonData2);
 
-                    var currency1 = Json(new { rates.rates.AUD, rates.date }, JsonRequestBehavior.AllowGet);
-                    var currency2 = Json(new { rates2.rates.SEK, rates2.date }, JsonRequestBehavior.AllowGet);
+                    //var currency1 = Json(new { rate1.rates.DKK, rate1.date }, JsonRequestBehavior.AllowGet).Data;
+                    //var currency2 = Json(new {rate2.rates.DKK, rate2.date }, JsonRequestBehavior.AllowGet).Data;
 
-                    return Json(new { C1 = currency1, C2 = currency2 }, JsonRequestBehavior.AllowGet);
-
-
+                    return Json(new { jsonData, jsonData2},JsonRequestBehavior.AllowGet);
 
                 }
 
