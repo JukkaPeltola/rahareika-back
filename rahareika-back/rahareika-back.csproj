@@ -358,7 +358,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Rates\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

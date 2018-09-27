@@ -11,6 +11,8 @@ namespace rahareika_back.Controllers
     {
 
         string url = "https://api.exchangeratesapi.io/latest";
+
+        // GET: Rates/GetLatestRates
         public async Task<ActionResult> GetLatestRates()
         {
             using (HttpClient client = new HttpClient())
@@ -28,6 +30,8 @@ namespace rahareika_back.Controllers
                 return Json(1, JsonRequestBehavior.AllowGet);
             }
         }
+
+        // GET: Rates/HistoricalRates/YYYYMMDD
         public async Task<ActionResult> HistoricalRates(int id)
         {
             string date = id.ToString();
@@ -54,6 +58,7 @@ namespace rahareika_back.Controllers
             }
         }
 
+        // GET: Rates/CompareRates/YYYY-MM-DD/YYYY-MM-DD
 
         [Route("comparerates /{startDate}/{endDate }")]
         public async Task<ActionResult> CompareRates(string startDate, string endDate)
