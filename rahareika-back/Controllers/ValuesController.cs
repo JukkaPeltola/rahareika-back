@@ -9,73 +9,85 @@ using System.Xml;
 using Newtonsoft.Json;
 using System.IO;
 using System.Xml.Linq;
+using System.Web.Mvc;
 
 namespace rahareika_back.Controllers
 {
     public class ValuesController : ApiController
     {
         private static readonly HttpClient client = new HttpClient();
-        // GET api/values
-        public string GetMonthlyUsdEurFrom1999ToNow()
+        // GET api/values/{frequency}/{basecurrency}/{comparingcurrency}
+
+        public string GetMonthlyUsdEurFrom1999ToNow(string basecurrency)
         {
-            
-            var inputUrl = $"https://sdw-wsrest.ecb.europa.eu/service/data/EXR/M.USD.EUR.SP00.A";
-            
-            using (XmlReader reader = XmlReader.Create(inputUrl))
+
+            var inputUrl = $"https://sdw-wsrest.ecb.europa.eu/service/data/EXR/D.{basecurrency}.EUR.SP00.A?startPeriod="
+                + DateTime.Now.AddDays(-31).ToString("yyyy-MM-dd")
+                + "&endPeriod=" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+            try
             {
-                //reader.ReadStartElement("generic:Series");
-                Dictionary<string, string> record = new Dictionary<string, string> { };
-
-                string timestamp = "startvalue";
-                string valueInComparison = "startvalue";
-                string lastValue = "startvalue";
-                bool valueHasUpdated = false;
-
-                while (reader.Read())
+                using (XmlReader reader = XmlReader.Create(inputUrl))
                 {
-                    if (reader.LocalName == "ObsDimension")
+                    //reader.ReadStartElement("generic:Series");
+                    Dictionary<string, string> record = new Dictionary<string, string> { };
+
+                    // variables for checking parse status 
+                    string timestamp = "startvalue";
+                    string valueInComparison = "startvalue";
+                    string lastValue = "startvalue";
+                    bool valueHasUpdated = false;
+
+                    while (reader.Read())
                     {
-                        while (reader.MoveToNextAttribute())
+                        //parse timestamps (ObsDimension) from currency observation timepoints and currency values in comparison (ObsValue) - "Obs" in ECB's SDMX hold these following values
+                        if (reader.LocalName == "ObsDimension")
                         {
-                            if (reader.LocalName != null || reader.LocalName != "")
+                            while (reader.MoveToNextAttribute())
                             {
-                                if (reader.Value != null || reader.Value != "")
+                                if (reader.LocalName != null || reader.LocalName != "")
                                 {
-                                    timestamp = reader.Value;
+                                    if (reader.Value != null || reader.Value != "")
+                                    {
+                                        timestamp = reader.Value;
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    if (reader.LocalName == "ObsValue")
-                    {
-                        while (reader.MoveToNextAttribute())
+                        if (reader.LocalName == "ObsValue")
                         {
-                            if (reader.LocalName != null || reader.LocalName != "")
+                            while (reader.MoveToNextAttribute())
                             {
-                                if (reader.Value != null || reader.Value != "")
+                                if (reader.LocalName != null || reader.LocalName != "")
                                 {
-                                    valueInComparison = reader.Value;
-                                    valueHasUpdated = true;
+                                    if (reader.Value != null || reader.Value != "")
+                                    {
+                                        valueInComparison = reader.Value;
+                                        valueHasUpdated = true;
+                                    }
                                 }
                             }
                         }
-                    }
+                        // collect values to dictionary, when the reader has corresponding timestamp and currency comparison values
+                        if (timestamp != "startvalue" && valueInComparison != "startvalue" && timestamp != lastValue && valueHasUpdated)
+                        {
+                            record.Add(timestamp, valueInComparison);
+                            lastValue = timestamp;
+                            valueHasUpdated = false;
+                        }
 
-                    if (timestamp != "humppa" && valueInComparison != "hamppa" && timestamp != lastValue && valueHasUpdated)
+                    }
+                    string paluuStringi = "Tästä lähtee: " + System.Environment.NewLine;
+                    foreach (KeyValuePair<string, string> entry in record)
                     {
-                        record.Add(timestamp, valueInComparison);
-                        lastValue = timestamp;
-                        valueHasUpdated = false;
+                        paluuStringi = paluuStringi + "Timestamp: " + entry.Key + " Value: " + entry.Value + System.Environment.NewLine;
                     }
-
+                    return paluuStringi;
                 }
-                string paluuStringi = "Tästä lähtee: " + System.Environment.NewLine;
-                foreach (KeyValuePair<string, string> entry in record)
-                {
-                    paluuStringi = paluuStringi + "Timestamp: " + entry.Key + " Value: " + entry.Value + System.Environment.NewLine;
-                }
-                return paluuStringi;
+            }
+            catch(Exception ex)
+            {
+                return ex.ToString();
             }
         }
         // GET api/values/5
