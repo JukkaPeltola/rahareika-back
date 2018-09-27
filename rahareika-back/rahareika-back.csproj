@@ -261,6 +261,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\EurToSmth.cs" />
     <Compile Include="Models\Rates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
