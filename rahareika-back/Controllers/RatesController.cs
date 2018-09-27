@@ -94,6 +94,8 @@ namespace rahareika_back.Controllers
             }
         }
 
+        // GET: rates/valuechange/DKK/YYYY-MM-DD/YYYY-MM-DD
+
         [Route("valuechange /{currency}/{startDate}/{endDate }")]
         public async Task<ActionResult> ValueChange(string currency, string startDate, string endDate)
         {
