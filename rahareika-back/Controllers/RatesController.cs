@@ -93,5 +93,44 @@ namespace rahareika_back.Controllers
                 return Json(1, JsonRequestBehavior.AllowGet);
             }
         }
+
+        [Route("currencychange /{currency}/{startDate}/{endDate }")]
+        public async Task<ActionResult> CurrencyChange(string currency, string startDate, string endDate)
+        {
+            string newUrl = "https://api.exchangeratesapi.io/" + startDate;
+            string newUrl2 = "https://api.exchangeratesapi.io/" + endDate;
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new System.Uri(newUrl);
+                client.BaseAddress = new System.Uri(newUrl2);
+
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = await client.GetAsync(newUrl);
+                HttpResponseMessage response2 = await client.GetAsync(newUrl2);
+
+                if (response.IsSuccessStatusCode && response2.IsSuccessStatusCode)
+                {
+                    string jsonData = await response.Content.ReadAsStringAsync();
+                    string jsonData2 = await response2.Content.ReadAsStringAsync();
+
+                    Rootobject rates = JsonConvert.DeserializeObject<Rootobject>(jsonData);
+                    Rootobject rates2 = JsonConvert.DeserializeObject<Rootobject>(jsonData2);
+
+                    var currency1 = Json(new { rates.rates.AUD, rates.date }, JsonRequestBehavior.AllowGet);
+                    var currency2 = Json(new { rates2.rates.SEK, rates2.date }, JsonRequestBehavior.AllowGet);
+
+                    return Json(new { C1 = currency1, C2 = currency2 }, JsonRequestBehavior.AllowGet);
+
+
+
+                }
+
+                return Json(1, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }
+
