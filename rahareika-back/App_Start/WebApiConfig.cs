@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace rahareika_back
 {
@@ -9,9 +10,13 @@ namespace rahareika_back
     {
         public static void Register(HttpConfiguration config)
         {
-
-            config.EnableCors();
             // Web API configuration and services
+
+            // CORS
+            string origin = "http://localhost";
+
+            EnableCorsAttribute cors = new EnableCorsAttribute(origin, "*", "*");
+            config.EnableCors(cors);
 
             // Web API routes
             config.MapHttpAttributeRoutes();

@@ -10,6 +10,7 @@ using System.Web.Mvc;
 namespace rahareika_back.Controllers
 {
     [RoutePrefix("rates")]
+    [EnableCors(origins: "http://localhost", headers: "*", methods: "*")]
     public class RatesController : Controller
     {
 

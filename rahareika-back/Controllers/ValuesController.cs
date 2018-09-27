@@ -12,9 +12,11 @@ using System.Xml.Linq;
 using System.Web.Mvc;
 using rahareika_back.Models;
 using Newtonsoft;
+using System.Web.Http.Cors;
 
 namespace rahareika_back.Controllers
 {
+    [EnableCors(origins: "http://localhost", headers: "*", methods: "*")]
     public class ValuesController : ApiController
     {
         private static readonly HttpClient client = new HttpClient();
