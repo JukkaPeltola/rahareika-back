@@ -94,5 +94,44 @@ namespace rahareika_back.Controllers
                 return Json(1, JsonRequestBehavior.AllowGet);
             }
         }
+
+        // GET: rates/valuechange/DKK/YYYY-MM-DD/YYYY-MM-DD
+
+        [Route("valuechange /{currency}/{startDate}/{endDate }")]
+        public async Task<ActionResult> ValueChange(string currency, string startDate, string endDate)
+        {
+            string newUrl = "https://api.exchangeratesapi.io/" + startDate + "?symbols=" + currency;
+            string newUrl2 = "https://api.exchangeratesapi.io/" + endDate + "?symbols=" + currency;
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new System.Uri(newUrl);
+                client.BaseAddress = new System.Uri(newUrl2);
+
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = await client.GetAsync(newUrl);
+                HttpResponseMessage response2 = await client.GetAsync(newUrl2);
+
+                if (response.IsSuccessStatusCode && response2.IsSuccessStatusCode)
+                {
+                    string jsonData = await response.Content.ReadAsStringAsync();
+                    string jsonData2 = await response2.Content.ReadAsStringAsync();
+
+                    //Rootobject rate1 = JsonConvert.DeserializeObject<Rootobject>(jsonData);
+                    //Rootobject rate2 = JsonConvert.DeserializeObject<Rootobject>(jsonData2);
+
+                    //var currency1 = Json(new { rate1.rates.DKK, rate1.date }, JsonRequestBehavior.AllowGet).Data;
+                    //var currency2 = Json(new {rate2.rates.DKK, rate2.date }, JsonRequestBehavior.AllowGet).Data;
+
+                    return Json(new { jsonData, jsonData2},JsonRequestBehavior.AllowGet);
+
+                }
+
+                return Json(1, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }
+
