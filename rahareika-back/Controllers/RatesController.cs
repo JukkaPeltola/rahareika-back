@@ -1,4 +1,7 @@
-﻿using System.Net.Http;
+﻿using Newtonsoft.Json;
+using rahareika_back.Models;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Cors;
@@ -12,6 +15,7 @@ namespace rahareika_back.Controllers
 
         string url = "https://api.exchangeratesapi.io/latest";
 
+
         // GET: Rates/GetLatestRates
         public async Task<ActionResult> GetLatestRates()
         {
@@ -23,6 +27,7 @@ namespace rahareika_back.Controllers
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
+
                     string jsonData = await response.Content.ReadAsStringAsync();
                     return (Content(jsonData, "application/json"));
                 }
@@ -79,11 +84,10 @@ namespace rahareika_back.Controllers
 
                 if (response.IsSuccessStatusCode && response2.IsSuccessStatusCode)
                 {
-
                     string jsonData = await response.Content.ReadAsStringAsync();
                     string jsonData2 = await response2.Content.ReadAsStringAsync();
 
-                    return Json(jsonData + jsonData2, JsonRequestBehavior.AllowGet);
+                    return Json(new { Data1 = jsonData, Data2 = jsonData2 }, JsonRequestBehavior.AllowGet);
                 }
 
                 return Json(1, JsonRequestBehavior.AllowGet);
