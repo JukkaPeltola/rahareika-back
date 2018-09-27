@@ -31,6 +31,11 @@ namespace rahareika_back
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
 
+            routes.MapRoute(
+                name: "SecondRoute",
+                url: "{controller}/{action}/{startDate}/{endDate}",
+                defaults: new { controller = "Home", action = "Index", startDate = "", endDate="" }
+            );
         }
     }
 }
