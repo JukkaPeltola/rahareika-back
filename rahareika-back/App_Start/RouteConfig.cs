@@ -32,9 +32,9 @@ namespace rahareika_back
             );
 
             routes.MapRoute(
-                name: "SecondRoute",
-                url: "{controller}/{action}/{startDate}/{endDate}",
-                defaults: new { controller = "Home", action = "Index", startDate = "", endDate="" }
+            name: "ThirdRoute",
+            url: "{controller}/{action}/{currency}/{startDate}/{endDate}",
+            defaults: new { controller = "Home", action = "Index", currency = "", startDate = "", endDate = "" }
             );
         }
     }
